@@ -1,8 +1,8 @@
 /*
  * dbhandler.go of  TeleBeam from modul TeleBeam
- * Created at 15.1.2022
+ * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 15.01.22, 14:48
+ * Last modified: 16.01.22, 17:23
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -34,7 +34,7 @@ func init() {
 	var cfg = libs.GetConfigValues()
 	var DBConfig string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", cfg.Database.Hostname, cfg.Database.Username, cfg.Database.Password, cfg.Database.DBName, strconv.Itoa(cfg.Database.Port))
 	//TODO: Implement bedder Error Catching with custom Error types defined over an Interface.
-	DB, err = gorm.Open(postgres.Open(DBConfig), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(DBConfig), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
 	//TODO: Work on bedder Error Catching. Fixing Problem instead.
 	if err != nil {
 		libs.LogError(fmt.Sprintf("Fatal Error: Could not etablish Connection to database: %s\nCause: %s!\nTerminating Application, please check connection to Database Server", cfg.Database.Hostname, err.Error()))

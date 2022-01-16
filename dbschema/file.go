@@ -1,8 +1,8 @@
 /*
- * cons.go of  TeleBeam from modul TeleBeam
+ * file.go of  TeleBeam from modul TeleBeam
  * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 16.01.22, 15:44
+ * Last modified: 16.01.22, 17:19
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -13,28 +13,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package libs
+package dbschema
 
-import (
-	"fmt"
-	"time"
-)
+import "gorm.io/gorm"
 
-const ApplicationName string = "TeleBeam - Beam your Files"
-const ApplicationLicense string = "MIT License"
-const Version float32 = 1.0
-
-var Year int
-var Month time.Month
-var Day int
-
-var ApplicationCopyright string
-var CFG = GetConfigValues()
-
-func init() {
-	Year = time.Now().Year()
-	Month = time.Now().Month()
-	Day = time.Now().Day()
-
-	ApplicationCopyright = fmt.Sprintf("%s Version %f \n(C) 2021 - %d the TeleBeam Team, Dierk-Bent Piening\nLicense: %s", ApplicationName, Version, Year, ApplicationLicense)
+type FileEntry struct {
+	gorm.Model
+	GUID              string `gorm:"primaryKey"`
+	IsAudio           bool
+	IsFile            bool
+	IsMovie           bool
+	IsImage           bool
+	IsOtherFile       bool
+	IsDownloadBlocked bool
+	FilePath          string
+	FileID            string
+	UniqueID          string
 }

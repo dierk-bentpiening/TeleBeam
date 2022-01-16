@@ -1,8 +1,8 @@
 /*
  * audio.go of  TeleBeam from modul TeleBeam
- * Created at 15.1.2022
+ * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 15.01.22, 14:48
+ * Last modified: 16.01.22, 17:50
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -17,25 +17,21 @@ package dbschema
 
 import (
 	"gorm.io/gorm"
-	"time"
 )
 
 type AudioEntitiy struct {
 	gorm.Model
-	GUID        string
+	ID          string `gorm:"primaryKey"`
+	FileEntryID string
+	FileEntry   FileEntry `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Title       string
 	Format      string
 	MimeType    string
-	UploaderID  int64
-	UploadDate  time.Time
-	Deleted     bool
-	Public      bool
 	Interpret   string
 	Album       string
-	Year        string
+	Year        int
 	Description string
 	Genre       string
-	FilePath    string
-	FileID      string
-	UniqueID    string
+	Lyrics      string
+	Composer    string
 }

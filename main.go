@@ -1,8 +1,8 @@
 /*
  * main.go of  TeleBeam from modul TeleBeam
- * Created at 15.1.2022
+ * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 15.01.22, 14:48
+ * Last modified: 16.01.22, 19:04
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -16,14 +16,13 @@
 package main
 
 import (
-	"TeleBeam/audiohandler"
 	"TeleBeam/dbhandler"
 	"TeleBeam/dbschema"
+	"TeleBeam/filehandler"
 	"TeleBeam/libs"
 	"fmt"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"log"
-	"os"
 	"time"
 )
 
@@ -39,25 +38,25 @@ func main() {
 	}
 
 	var errMigrate = dbhandler.DB.AutoMigrate(
+		&dbschema.FileEntry{},
 		&dbschema.AudioEntitiy{},
 	)
 	if errMigrate != nil {
 		libs.LogError(err.Error())
-		os.Exit(128)
 	}
 	b.Handle("/start", func(m *tb.Message) {
-		b.Send(m.Sender, fmt.Sprintf("Hello %s, i am TeleTransferNG.\nYour Contact Bot to get all the Files you need.", m.Sender.FirstName))
+		//TODO: Put LogInfo Logic for Recieved Command inside of an own function.
+		go libs.LogInfo(fmt.Sprintf("Recieved start Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+		b.Send(m.Sender, fmt.Sprintf("Hello %s, i am TeleBeam.\nYour Contact Bot to get all the Files you need.", m.Sender.FirstName))
 	})
 	b.Handle(tb.OnAudio, func(m *tb.Message) {
-		audiohandler.RecievedAudio(m, b)
+		go filehandler.RecievedAudio(m, b)
 	})
-	b.Handle("/downloadaudio", func(m *tb.Message) {
-		fmt.Println(m.Payload)
-		var AudioFileD dbschema.AudioEntitiy
-		dbhandler.DB.Where("GUID=?", m.Payload).Find(&AudioFileD)
-		SendFile := &tb.Audio{File: tb.File{FileID: AudioFileD.FileID, FilePath: AudioFileD.FilePath, UniqueID: AudioFileD.UniqueID}}
-		fmt.Println(SendFile)
-		b.Send(m.Sender, SendFile)
+	b.Handle("/download", func(m *tb.Message) {
+		var FileEntry dbschema.FileEntry
+		dbhandler.DB.Where("GUID = ?", m.Payload).Find(&FileEntry)
+		SendFile := &tb.Audio{File: tb.File{FileID: FileEntry.FileID, FilePath: FileEntry.FilePath, UniqueID: FileEntry.UniqueID}}
+		go b.Send(m.Sender, SendFile)
 	})
 
 	b.Start()

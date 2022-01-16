@@ -3,6 +3,7 @@ module TeleBeam
 go 1.17
 
 require (
+	github.com/dhowden/tag v0.0.0-20201120070457-d52dcb253c63
 	github.com/google/uuid v1.3.0
 	gopkg.in/tucnak/telebot.v2 v2.5.0
 	gopkg.in/yaml.v2 v2.2.2

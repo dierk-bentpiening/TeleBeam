@@ -1,8 +1,8 @@
 /*
  * configloader.go of  TeleBeam from modul TeleBeam
- * Created at 15.1.2022
+ * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 15.01.22, 14:48
+ * Last modified: 16.01.22, 15:30
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -34,8 +34,11 @@ type Config struct {
 	} `yaml:"database"`
 	Telegram struct {
 		APIToken   string `yaml:"apitoken"`
-		APIBaseURL string `yaml:"APIBaseURL"`
+		APIBaseURL string `yaml:"apibaseurl"`
 	} `yaml:"telegram"`
+	Download struct {
+		TempPath string `yaml:"temppath"`
+	} `yaml:"download"`
 }
 
 func processError(err error) {

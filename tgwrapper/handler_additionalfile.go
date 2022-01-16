@@ -1,8 +1,8 @@
 /*
- * handler.go of  TeleBeam from modul TeleBeam
- * Created at 15.1.2022
+ * handler_additionalfile.go of  TeleBeam from modul TeleBeam
+ * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 15.01.22, 14:48
+ * Last modified: 16.01.22, 18:59
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
