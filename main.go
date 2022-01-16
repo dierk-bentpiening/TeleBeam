@@ -2,7 +2,7 @@
  * main.go of  TeleBeam from modul TeleBeam
  * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 16.01.22, 19:04
+ * Last modified: 16.01.22, 22:23
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -36,14 +36,6 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-
-	var errMigrate = dbhandler.DB.AutoMigrate(
-		&dbschema.FileEntry{},
-		&dbschema.AudioEntitiy{},
-	)
-	if errMigrate != nil {
-		libs.LogError(err.Error())
-	}
 	b.Handle("/start", func(m *tb.Message) {
 		//TODO: Put LogInfo Logic for Recieved Command inside of an own function.
 		go libs.LogInfo(fmt.Sprintf("Recieved start Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
@@ -57,6 +49,31 @@ func main() {
 		dbhandler.DB.Where("GUID = ?", m.Payload).Find(&FileEntry)
 		SendFile := &tb.Audio{File: tb.File{FileID: FileEntry.FileID, FilePath: FileEntry.FilePath, UniqueID: FileEntry.UniqueID}}
 		go b.Send(m.Sender, SendFile)
+	})
+	b.Handle("/searchbyinterpret", func(m *tb.Message) {
+		go libs.LogInfo(fmt.Sprintf("Recieved /searchbyinterpret Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+
+		go filehandler.GetTitleByInterpreter(m, b)
+	})
+	b.Handle("/searchbygenre", func(m *tb.Message) {
+		go libs.LogInfo(fmt.Sprintf("Recieved /searchbygenre Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+
+		go filehandler.GetByGenre(m, b)
+	})
+	b.Handle("/searchbytitle", func(m *tb.Message) {
+		go libs.LogInfo(fmt.Sprintf("Recieved /searchbytitle Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+
+		go filehandler.GetByTitle(m, b)
+	})
+	b.Handle("/searchbyyear", func(m *tb.Message) {
+		go libs.LogInfo(fmt.Sprintf("Recieved /searchbyyear Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+
+		go filehandler.GetByYear(m, b)
+	})
+	b.Handle("/searchbyalbum", func(m *tb.Message) {
+		go libs.LogInfo(fmt.Sprintf("Recieved /searchbyalbum Command from User %s\nUserID: %d\nFirstname: %s\nLastname: %s\n", m.Sender.Username, m.Sender.ID, m.Sender.FirstName, m.Sender.LastName))
+
+		go filehandler.GetByAlbum(m, b)
 	})
 
 	b.Start()

@@ -2,7 +2,7 @@
  * dbhandler.go of  TeleBeam from modul TeleBeam
  * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 16.01.22, 17:23
+ * Last modified: 16.01.22, 22:53
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -16,6 +16,7 @@
 package dbhandler
 
 import (
+	"TeleBeam/dbschema"
 	"TeleBeam/libs"
 	"fmt"
 	"gorm.io/driver/postgres"
@@ -30,6 +31,7 @@ var (
 
 //TODO: Change Initialization of DB to be Function with just setting a Pointer to DB Variable
 func init() {
+
 	var err error
 	var cfg = libs.GetConfigValues()
 	var DBConfig string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", cfg.Database.Hostname, cfg.Database.Username, cfg.Database.Password, cfg.Database.DBName, strconv.Itoa(cfg.Database.Port))
@@ -41,6 +43,13 @@ func init() {
 		os.Exit(128)
 	} else {
 		libs.LogInfo(fmt.Sprintf("Successfully Connected to database server: %s:%s\n", cfg.Database.Hostname, strconv.Itoa(cfg.Database.Port)))
+	}
+	var errMigrate = DB.AutoMigrate(
+		&dbschema.FileEntry{},
+		&dbschema.AudioEntitiy{},
+	)
+	if errMigrate != nil {
+		libs.LogError(err.Error())
 	}
 
 }

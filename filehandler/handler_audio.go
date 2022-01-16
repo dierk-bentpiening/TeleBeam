@@ -2,7 +2,7 @@
  * handler_audio.go of  TeleBeam from modul TeleBeam
  * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 16.01.22, 17:51
+ * Last modified: 16.01.22, 23:10
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -26,10 +26,143 @@ import (
 	"github.com/dhowden/tag"
 	"github.com/google/uuid"
 	tb "gopkg.in/tucnak/telebot.v2"
+
 	"os"
 	"path"
 )
 
+func GetTitleByInterpreter(m *tb.Message, b *tb.Bot) {
+	var titles []dbschema.AudioEntitiy
+	var searchInterpret string = "%" + m.Payload + "%"
+	dbhandler.DB.Where("Interpret LIKE ?", searchInterpret).Find(&titles)
+	var message string
+	var anmountTitles int = len(titles)
+	if anmountTitles == 0 {
+		b.Send(m.Sender, fmt.Sprintf("<b>Sorry %s,</b>\ni do <u>not</u> have any Titles for Interpret %s in the Database", m.Sender.FirstName, m.Payload), tb.ModeHTML)
+
+	} else {
+		var counter int = 1
+		var messageBuffer string
+		for _, title := range titles {
+			if counter == 1 {
+				messageBuffer = fmt.Sprintf("<b>Found %d Titles of Interpret %s</b>\n\n<b>Title %d of %d</b>\n<b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", anmountTitles, m.Payload, counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			} else {
+				messageBuffer = fmt.Sprintf("<b>Title %d of %d\n</b><b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			}
+
+			counter++
+		}
+		b.Send(m.Sender, message, tb.ModeHTML)
+	}
+
+}
+func GetByTitle(m *tb.Message, b *tb.Bot) {
+	var titles []dbschema.AudioEntitiy
+	var searchInterpret string = "%" + m.Payload + "%"
+	dbhandler.DB.Where("Title LIKE ?", searchInterpret).Find(&titles)
+	var message string
+	var anmountTitles int = len(titles)
+	if anmountTitles == 0 {
+		b.Send(m.Sender, fmt.Sprintf("<b>Sorry %s,</b>\ni do <u>not</u> have any Titles for Title %s in the Database", m.Sender.FirstName, m.Payload), tb.ModeHTML)
+
+	} else {
+		var counter int = 1
+		var messageBuffer string
+		for _, title := range titles {
+			if counter == 1 {
+				messageBuffer = fmt.Sprintf("<b>Found %d Titles matching Title %s</b>\n\n<b>Title %d of %d</b>\n<b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", anmountTitles, m.Payload, counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			} else {
+				messageBuffer = fmt.Sprintf("<b>Title %d of %d\n</b><b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			}
+
+			counter++
+		}
+		b.Send(m.Sender, message, tb.ModeHTML)
+	}
+}
+func GetByGenre(m *tb.Message, b *tb.Bot) {
+	var titles []dbschema.AudioEntitiy
+	var searchInterpret string = "%" + m.Payload + "%"
+	dbhandler.DB.Where("genre LIKE ?", searchInterpret).Find(&titles)
+	var message string
+	var anmountTitles int = len(titles)
+	if anmountTitles == 0 {
+		b.Send(m.Sender, fmt.Sprintf("<b>Sorry %s,</b>\ni do <u>not</u> have any Titles for Genre %s in the Database", m.Sender.FirstName, m.Payload), tb.ModeHTML)
+
+	} else {
+		var counter int = 1
+		var messageBuffer string
+		for _, title := range titles {
+			if counter == 1 {
+				messageBuffer = fmt.Sprintf("<b>Found %d Titles of Genre %s</b>\n\n<b>Title %d of %d</b>\n<b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", anmountTitles, m.Payload, counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			} else {
+				messageBuffer = fmt.Sprintf("<b>Title %d of %d\n</b><b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			}
+
+			counter++
+		}
+		b.Send(m.Sender, message, tb.ModeHTML)
+	}
+}
+func GetByYear(m *tb.Message, b *tb.Bot) {
+	var titles []dbschema.AudioEntitiy
+	var searchInterpret string = "%" + m.Payload + "%"
+	dbhandler.DB.Where("year LIKE ?", searchInterpret).Find(&titles)
+	var message string
+	var anmountTitles int = len(titles)
+	if anmountTitles == 0 {
+		b.Send(m.Sender, fmt.Sprintf("<b>Sorry %s,</b>\ni do <u>not</u> have any Titles for Year %s in the Database", m.Sender.FirstName, m.Payload), tb.ModeHTML)
+
+	} else {
+		var counter int = 1
+		var messageBuffer string
+		for _, title := range titles {
+			if counter == 1 {
+				messageBuffer = fmt.Sprintf("<b>Found %d Titles of Year %s</b>\n\n<b>Title %d of %d</b>\n<b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", anmountTitles, m.Payload, counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			} else {
+				messageBuffer = fmt.Sprintf("<b>Title %d of %d\n</b><b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			}
+
+			counter++
+		}
+		b.Send(m.Sender, message, tb.ModeHTML)
+	}
+}
+
+func GetByAlbum(m *tb.Message, b *tb.Bot) {
+	var titles []dbschema.AudioEntitiy
+	var searchInterpret string = "%" + m.Payload + "%"
+	dbhandler.DB.Where("album LIKE ?", searchInterpret).Find(&titles)
+	var message string
+	var anmountTitles int = len(titles)
+	if anmountTitles == 0 {
+		b.Send(m.Sender, fmt.Sprintf("<b>Sorry %s,</b>\ni do <u>not</u> have any Titles for Album %s in the Database", m.Sender.FirstName, m.Payload), tb.ModeHTML)
+
+	} else {
+		var counter int = 1
+		var messageBuffer string
+		for _, title := range titles {
+			if counter == 1 {
+				messageBuffer = fmt.Sprintf("<b>Found %d Titles of Album %s</b>\n\n<b>Title %d of %d</b>\n<b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", anmountTitles, m.Payload, counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			} else {
+				messageBuffer = fmt.Sprintf("<b>Title %d of %d\n</b><b>Title:</b> %s\n<b>Interpret:</b> %s\n<b>Album:</b> %s\n<b>Composer:</b> %s\n<b>Year:</b> %d\n<b>Genre:</b> %s\n<b><u>FileID: %s</u></b>\n\n", counter, anmountTitles, title.Title, title.Interpret, title.Album, title.Composer, title.Year, title.Genre, title.ID)
+				message = message + messageBuffer
+			}
+
+			counter++
+		}
+		b.Send(m.Sender, message, tb.ModeHTML)
+	}
+}
 func RecievedAudio(m *tb.Message, b *tb.Bot) {
 	libs.LogInfo(fmt.Sprintf("Recieved AudioFile from User %s;\nUserID: %d\nLanguageCode: %s;\nFirstname: %s;\nLastname: %s", m.Sender.Username, m.Sender.ID, m.Sender.LanguageCode, m.Sender.FirstName, m.Sender.LastName))
 
@@ -69,17 +202,9 @@ func RecievedAudio(m *tb.Message, b *tb.Bot) {
 						} else {
 							result := dbhandler.DB.Create(&dbschema.AudioEntitiy{
 								ID:          FileGuid,
-								Title:       m.Audio.Title,
-								Format:      Fileextension,
-								MimeType:    m.Audio.MIME,
-								Interpret:   m.Audio.Performer,
-								Album:       fileMetaData.Album(),
-								Year:        fileMetaData.Year(),
-								Description: m.Audio.Caption,
-								Genre:       fileMetaData.Genre(),
-								Composer:    fileMetaData.Composer(),
-								Lyrics:      fileMetaData.Lyrics(),
+								FileEntryID: FileGuid,
 								FileEntry: dbschema.FileEntry{
+									FileEntryID:       FileGuid,
 									GUID:              FileGuid,
 									IsAudio:           true,
 									IsFile:            false,
@@ -90,7 +215,19 @@ func RecievedAudio(m *tb.Message, b *tb.Bot) {
 									FileID:            TelegramFile.FileID,
 									FilePath:          AdditionalFileData.FileData.FilePath,
 									UniqueID:          AdditionalFileData.FileData.FileUniqueID,
-								}})
+								},
+
+								Title:       m.Audio.Title,
+								Format:      Fileextension,
+								MimeType:    m.Audio.MIME,
+								Interpret:   m.Audio.Performer,
+								Album:       fileMetaData.Album(),
+								Year:        fileMetaData.Year(),
+								Description: m.Audio.Caption,
+								Genre:       fileMetaData.Genre(),
+								Composer:    fileMetaData.Composer(),
+								Lyrics:      fileMetaData.Lyrics(),
+							})
 
 							if result.Error != nil {
 
@@ -117,7 +254,7 @@ func RecievedAudio(m *tb.Message, b *tb.Bot) {
 			}
 		}
 	} else {
-		b.Send(m.Sender, fmt.Sprintf("Sorry %s, The Title %s from Interpret %s is allready present and has the FileID %s\nPlease upload another Title...", m.Sender.FirstName, AudioTitle.Title, AudioTitle.Interpret, AudioTitle.FileEntry.GUID))
-		libs.LogWarning(fmt.Sprintf("User %d <%s> tried to add the Title %s from Interpret on Chat %s, but is allready present and has the FileID %s\n", m.Sender.ID, m.Sender.Username, AudioTitle.Title, AudioTitle.Interpret, m.Chat, AudioTitle.FileEntry.GUID))
+		b.Send(m.Sender, fmt.Sprintf("Sorry %s, The Title %s from Interpret %s is allready present and has the FileID %s\nPlease upload another Title...", m.Sender.FirstName, AudioTitle.Title, AudioTitle.Interpret, AudioTitle.ID))
+		libs.LogWarning(fmt.Sprintf("User %d <%s> tried to add the Title %s from Interpret on Chat %s, but is allready present and has the FileID %s\n", m.Sender.ID, m.Sender.Username, AudioTitle.Title, AudioTitle.Interpret, m.Chat, AudioTitle.ID))
 	}
 }

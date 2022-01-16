@@ -2,7 +2,7 @@
  * file.go of  TeleBeam from modul TeleBeam
  * Created at 16.1.2022
  * Created from: dpiening
- * Last modified: 16.01.22, 17:19
+ * Last modified: 16.01.22, 22:54
  * Copyright (C) 2021 - 2022 Dierk-Bent Piening & the TeleBeam Team.
  *
  *
@@ -19,14 +19,15 @@ import "gorm.io/gorm"
 
 type FileEntry struct {
 	gorm.Model
-	GUID              string `gorm:"primaryKey"`
-	IsAudio           bool
-	IsFile            bool
-	IsMovie           bool
-	IsImage           bool
-	IsOtherFile       bool
-	IsDownloadBlocked bool
-	FilePath          string
-	FileID            string
-	UniqueID          string
+	FileEntryID       string `gorm:"primaryKey"`
+	GUID              string `gorm:"unique"`
+	IsAudio           bool   `gorm:"dafault:false"`
+	IsFile            bool   `gorm:"dafault:false"`
+	IsMovie           bool   `gorm:"dafault:false"`
+	IsImage           bool   `gorm:"dafault:false"`
+	IsOtherFile       bool   `gorm:"dafault:false"`
+	IsDownloadBlocked bool   `gorm:"dafault:false"`
+	FilePath          string `gorm:"unique"`
+	FileID            string `gorm:"unique"`
+	UniqueID          string `gorm:"unique"`
 }
